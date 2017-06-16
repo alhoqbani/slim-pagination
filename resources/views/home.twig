@@ -1,0 +1,15 @@
+{% extends 'layouts/master.twig' %}
+{% block content %}
+    <h1>Welcome Home</h1>
+    {% if users is not empty %}
+        {% for user in users %}
+           <ul>
+               <li> {{ user.name }} - {{ user.email }}
+               </li>
+           </ul>
+        {% endfor %}
+    {% else %}
+        <h2>No Users</h2>
+    {% endif %}
+
+{% endblock %}
