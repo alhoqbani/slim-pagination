@@ -23,7 +23,7 @@ class BaseModel
     {
         $results = $this->db->query("SELECT * FROM " . $this->table);
         
-        return $results->fetchAll();
+        return $results->fetchAll(PDO::FETCH_ASSOC);
     }
     
 }

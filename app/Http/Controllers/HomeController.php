@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -24,8 +25,23 @@ class HomeController extends BaseController
      */
     public function index(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
-        $user = new User($this->db);
-        $users = $user->getAll();
+        $dbUser = new User($this->db);
+        $users = $dbUser->getAll();
+        $perPage = $request->getParam('perPage', 10);
+        $currentPage = $request->getParam('page', 1);
+        
+        $users = new LengthAwarePaginator(
+            array_slice($users, ($currentPage - 1) * $perPage, $perPage),
+            count($users),
+            $perPage,
+            $currentPage,
+            $options = [
+                'path'  => $request->getUri()->getPath(),
+                'query' => $request->getParams(),
+            ]
+        );
+        
+//        die(dump($pagination));
         
         return $this->view->render($response, 'home.twig', compact('users'));
     }
